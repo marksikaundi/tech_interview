@@ -1,20 +1,50 @@
 import { StatusBar } from 'expo-status-bar';
-import { StyleSheet, Text, View } from 'react-native';
+import { useEffect, useState } from 'react';
+import { ActivityIndicator, StyleSheet, View } from 'react-native';
 
 export default function App() {
+  let [isLoading, setIsLoading] = useState(true);
+  let [response, setResponse] = useState();
+  let [error, setError] = useState();
+
+  useEffect(() => {
+    fetch("https://api.thecatapi.com/v1/breeds")
+    .then(res => res.json())
+    .then(
+      (result) => {
+        setIsLoading(false);
+        setResponse(result);
+      },
+      // error hundling
+      (error) => {
+        setIsLoading(false);
+        setError(error);
+      }
+    )
+  }, []);
+
+  // getting contents
+  const getContent = () => {(isLoading)
+    return <ActivityIndicator size="large" />
+  }
+
+  if (error) {
+    return <Text>{error}</Text>
+  }
+
+  console.log(response);
+  return <Text>oh its working</Text>
+
   return (
     <View style={styles.container}>
-      <Text>Open up App.js to start working on your app!</Text>
-      <StatusBar style="auto" />
+      {getContent()}
+      <StatusBar style='auto' />
     </View>
-  );
-}
+  )
+  }
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
-    backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
+
+  }
 });
